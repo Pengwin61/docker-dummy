@@ -4,7 +4,10 @@ import (
 	"docker-dummy/internal/connections"
 	"docker-dummy/internal/core"
 	"docker-dummy/internal/database"
+	"docker-dummy/internal/rabbitmq"
 	"docker-dummy/internal/redis"
+	"fmt"
+	"log"
 	"net/http"
 	"time"
 
@@ -27,6 +30,13 @@ func getResponse(c *gin.Context) {
 					Surname: connections.Con.Redis.Get("surname"),
 				},
 			},
+			Rabbit: Rabbit{
+				Hostname: fmt.Sprint(rabbitmq.RabbitIP, ":", rabbitmq.RabbitPort),
+				Status:   "to_do",
+				RabbitResponse: RabbitResponse{
+					Msg: msg,
+				},
+			},
 			Database: Database{
 				Hostname: database.PostgresIp,
 				Status:   "to_do",
@@ -38,4 +48,27 @@ func getResponse(c *gin.Context) {
 		},
 	}
 	c.JSON(http.StatusOK, response)
+}
+
+var msg []string
+
+func T() {
+
+	messages := connections.Con.RabbitMQ.Get("testQueue")
+	forever := make(chan bool)
+
+	go func() {
+		for message := range messages {
+			log.Printf(" > Received message: %s\n", message.Body)
+
+			if len(msg) < 500 {
+				msg = append(msg, string(message.Body))
+			} else {
+				log.Println("переполнился")
+				msg = nil
+			}
+
+		}
+	}()
+	<-forever
 }

@@ -11,6 +11,7 @@ type response struct {
 type ExternalService struct {
 	Redis    Redis    `json:"redis"`
 	Database Database `json:"database"`
+	Rabbit   Rabbit   `json:"rabbit"`
 }
 type System struct {
 	Hostname string `json:"hostname"`
@@ -20,19 +21,28 @@ type System struct {
 type Redis struct {
 	Hostname      string        `json:"redishostname"`
 	Status        string        `json:"redisstatus"`
-	RedisResponse RedisResponse `json:"redisResponse"`
+	RedisResponse RedisResponse `json:"redisresponse"`
 }
-
 type RedisResponse struct {
 	Name    string `json:"redisname"`
 	Surname string `json:"redissurname"`
 }
+
 type Database struct {
 	Hostname   string     `json:"dbname"`
 	Status     string     `json:"dbstatus"`
-	DbResponse DbResponse `json:"dbResponse"`
+	DbResponse DbResponse `json:"dbresponse"`
 }
 type DbResponse struct {
 	Name    string `json:"dbname"`
 	Surname string `json:"dbsurname"`
+}
+
+type Rabbit struct {
+	Hostname       string         `json:"rabbithostname"`
+	Status         string         `json:"rabbitstatus"`
+	RabbitResponse RabbitResponse `json:"rabbitresponse"`
+}
+type RabbitResponse struct {
+	Msg []string `json:"rabbitmsg"`
 }

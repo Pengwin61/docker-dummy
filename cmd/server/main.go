@@ -2,21 +2,21 @@ package main
 
 import (
 	"docker-dummy/internal/connections"
-	"docker-dummy/internal/rabbitmq"
 	"docker-dummy/internal/redis"
 	"docker-dummy/internal/web"
+	"fmt"
 )
 
 func main() {
-	rabbitmq.Init()
+
+	fmt.Println("Starting server....")
 
 	connections.InitAllConnections(redis.RedisIp, "", 0)
 
-	connections.Con.Redis.Set("name", "Elliot")
-	connections.Con.Redis.Set("surname", "Alderson")
-	connections.Con.Redis.Set("msg", "Hello, Friend!")
-
 	defer connections.Con.Redis.Close()
 
-	web.InitGun()
+	go web.InitGun()
+
+	web.T()
+
 }

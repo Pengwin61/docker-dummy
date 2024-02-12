@@ -1,9 +1,13 @@
 package connections
 
-import "docker-dummy/internal/redis"
+import (
+	"docker-dummy/internal/rabbitmq"
+	"docker-dummy/internal/redis"
+)
 
 type Connections struct {
-	Redis *redis.ClientRedis
+	Redis    *redis.ClientRedis
+	RabbitMQ *rabbitmq.ClientRabbit
 }
 
 var Con *Connections
@@ -16,5 +20,7 @@ func getAllConnections(ip string, pass string, db int) *Connections {
 
 	rc := redis.NewRedisClient(ip, pass, db)
 
-	return &Connections{Redis: rc}
+	rabbitc := rabbitmq.NewRabbitClient()
+
+	return &Connections{Redis: rc, RabbitMQ: rabbitc}
 }
