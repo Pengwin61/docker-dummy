@@ -52,7 +52,7 @@ func getResponse(c *gin.Context) {
 
 var msg []string
 
-func T() {
+func ReadInQueue() {
 
 	messages := connections.Con.RabbitMQ.Get("testQueue")
 	forever := make(chan bool)

@@ -1,15 +1,40 @@
 package main
 
 import (
+	"docker-dummy/internal/config"
 	"docker-dummy/internal/connections"
 	"docker-dummy/internal/redis"
+	"docker-dummy/internal/web"
 	"fmt"
 	"time"
 )
 
-var Count = 1000000
-
 func main() {
+	conf := config.InitConfig()
+
+	if conf.Server {
+		startServer()
+	} else if conf.Client {
+		startClient()
+	} else {
+		fmt.Println("Please specify server or client")
+	}
+}
+
+func startServer() {
+	fmt.Println("Starting server....")
+
+	connections.InitAllConnections(redis.RedisIp, "", 0)
+
+	defer connections.Con.Redis.Close()
+
+	go web.InitGun()
+
+	web.ReadInQueue()
+}
+
+func startClient() {
+	var Count = 1000000
 
 	fmt.Println("Starting client....")
 
@@ -34,5 +59,4 @@ func main() {
 		fmt.Println("Sleeep...")
 
 	}
-
 }

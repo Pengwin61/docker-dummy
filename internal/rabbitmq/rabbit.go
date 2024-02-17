@@ -22,13 +22,13 @@ type ClientRabbit struct {
 }
 
 func NewRabbitClient() *ClientRabbit {
+
 	conn, err := amqp.Dial(fmt.Sprintf("amqp://%s:%s@%s:%s/", rabbitUser, rabbitPass, RabbitIP, RabbitPort))
 	if err != nil {
+
 		log.Fatalf("unable to open connect to RabbitMQ server. Error: %s", err)
 	}
-
 	ch, q := newQueue(conn, "testQueue")
-
 	return &ClientRabbit{Client: conn, Queue: &q, Channel: ch}
 }
 
