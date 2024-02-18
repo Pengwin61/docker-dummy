@@ -3,7 +3,6 @@ package web
 import (
 	"docker-dummy/internal/connections"
 	"docker-dummy/internal/core"
-	"docker-dummy/internal/database"
 	"fmt"
 	"log"
 	"net/http"
@@ -30,17 +29,17 @@ func getResponse(c *gin.Context) {
 			},
 			Rabbit: Rabbit{
 				Hostname: fmt.Sprint(webParams.rabbitHost, ":", webParams.rabbitPort),
-				Status:   "to_do",
+				Status:   "TO_DO",
 				RabbitResponse: RabbitResponse{
 					Msg: msg,
 				},
 			},
 			Database: Database{
-				Hostname: database.PostgresIp,
-				Status:   "to_do",
+				Hostname: "TO_DO",
+				Status:   "TO_DO",
 				DbResponse: DbResponse{
-					Name:    "to_do",
-					Surname: "to_do",
+					Name:    "TO_DO",
+					Surname: "TO_DO",
 				},
 			},
 		},
