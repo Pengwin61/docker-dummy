@@ -21,18 +21,18 @@ func getResponse(c *gin.Context) {
 		},
 		ExternalService: ExternalService{
 			Redis: Redis{
-				Hostname: redisHost,
-				Status:   connections.Con.Redis.Check().Val(),
+				Hostname: webParams.redisHost,
+				Status:   connections.Con.Redis.Check(),
 				RedisResponse: RedisResponse{
-					Name:    connections.Con.Redis.Get("name"),
-					Surname: connections.Con.Redis.Get("surname"),
+					Name:    "name",
+					Surname: "s",
 				},
 			},
 			Rabbit: Rabbit{
-				Hostname: fmt.Sprint(rabbitHost, ":", rabbitPort),
+				Hostname: fmt.Sprint(webParams.rabbitHost, ":", webParams.rabbitPort),
 				Status:   "to_do",
 				RabbitResponse: RabbitResponse{
-					Msg: []string{"to_do", "to_do"},
+					Msg: msg,
 				},
 			},
 			Database: Database{
@@ -52,21 +52,24 @@ var msg []string
 
 func ReadInQueue() {
 
-	messages := connections.Con.RabbitMQ.Get("testQueue")
-	forever := make(chan bool)
+	if connections.Con.RabbitMQ != nil {
+		messages := connections.Con.RabbitMQ.Get(webParams.rabbitQueue)
+		forever := make(chan bool)
 
-	go func() {
-		for message := range messages {
-			log.Printf(" > Received message: %s\n", message.Body)
+		go func() {
+			for message := range messages {
+				if len(msg) < 500 {
+					msg = append(msg, string(message.Body))
+				} else {
+					log.Println("переполнился")
+					msg = nil
+				}
 
-			if len(msg) < 500 {
-				msg = append(msg, string(message.Body))
-			} else {
-				log.Println("переполнился")
-				msg = nil
 			}
+		}()
+		<-forever
+	} else {
+		msg = append(msg, "host rabbit is not connected")
+	}
 
-		}
-	}()
-	<-forever
 }

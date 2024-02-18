@@ -45,8 +45,13 @@ func (cr *ClientRedis) Set(key, value string) {
 	ewrap.Err(err)
 }
 
-func (cr *ClientRedis) Check() *redis.StatusCmd {
-	return cr.client.Ping(context.Background())
+func (cr *ClientRedis) Check() string {
+
+	if cr.client != nil {
+		return cr.client.Ping(context.Background()).String()
+	}
+	return ""
+	// return cr.client.Ping(context.Background()) *redis.StatusCmd
 }
 
 func (cr *ClientRedis) Close() {

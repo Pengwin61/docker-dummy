@@ -7,15 +7,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var redisHost string
-var rabbitHost string
-var rabbitPort string
+type WebParams struct {
+	redisHost   string
+	rabbitHost  string
+	rabbitPort  string
+	rabbitQueue string
+}
+
+var webParams *WebParams
 
 func InitGun(config *config.Config) {
-
-	redisHost = config.Redis.Host
-	rabbitHost = config.RabbitMQ.Host
-	rabbitPort = config.RabbitMQ.Port
+	webParams = getParams(config)
 
 	r := gin.Default()
 
@@ -33,4 +35,13 @@ func InitGun(config *config.Config) {
 func RunApi(r *gin.Engine) {
 
 	r.GET("/", getResponse)
+}
+
+func getParams(config *config.Config) *WebParams {
+
+	return &WebParams{
+		redisHost:   config.Redis.Host,
+		rabbitHost:  config.RabbitMQ.Host,
+		rabbitPort:  config.RabbitMQ.Port,
+		rabbitQueue: config.RabbitMQ.QueueName}
 }

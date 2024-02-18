@@ -4,6 +4,7 @@ import (
 	"docker-dummy/internal/config"
 	"docker-dummy/internal/rabbitmq"
 	"docker-dummy/internal/redis"
+	"log"
 )
 
 type Connections struct {
@@ -18,15 +19,20 @@ func InitAllConnections(config *config.Config) {
 }
 
 func getAllConnections(config *config.Config) *Connections {
+	var rc *redis.ClientRedis
+	var rabbitc *rabbitmq.ClientRabbit
 
 	if config.Redis.Enable {
-		rc := redis.NewRedisClient(config.Redis.Host, config.Redis.Port, config.Redis.Pass, config.Redis.Db)
-		return &Connections{Redis: rc, RabbitMQ: nil}
-	}
-	if config.RabbitMQ.Enable {
-		rabbitc := rabbitmq.NewRabbitClient(config)
-		return &Connections{Redis: nil, RabbitMQ: rabbitc}
+		rc = redis.NewRedisClient(config.Redis.Host, config.Redis.Port, config.Redis.Pass, config.Redis.Db)
+	} else {
+		log.Println("i can't connect to the redis host because the enable parameter is false")
 	}
 
-	return nil
+	if config.RabbitMQ.Enable {
+		rabbitc = rabbitmq.NewRabbitClient(config)
+	} else {
+		log.Println("i can't connect to the redis host because the enable parameter is false")
+	}
+
+	return &Connections{Redis: rc, RabbitMQ: rabbitc}
 }

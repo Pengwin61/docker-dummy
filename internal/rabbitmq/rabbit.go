@@ -18,14 +18,12 @@ type ClientRabbit struct {
 }
 
 func NewRabbitClient(config *config.Config) *ClientRabbit {
-
 	conn, err := amqp.Dial(fmt.Sprintf("amqp://%s:%s@%s:%s/",
 		config.RabbitMQ.User, config.RabbitMQ.Pass, config.RabbitMQ.Host, config.RabbitMQ.Port))
 	if err != nil {
-
 		log.Fatalf("unable to open connect to RabbitMQ server. Error: %s", err)
 	}
-	ch, q := newQueue(conn, "testQueue")
+	ch, q := newQueue(conn, config.RabbitMQ.QueueName)
 	return &ClientRabbit{Client: conn, Queue: &q, Channel: ch}
 }
 

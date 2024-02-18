@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	conf := config.InitConfig()
+	conf := config.GetConfig()
 
 	if conf.App.Server {
 		startServer(conf)
@@ -30,9 +30,8 @@ func startServer(config *config.Config) {
 	if config.Redis.Enable {
 		defer connections.Con.Redis.Close()
 	}
-
 	if config.RabbitMQ.Enable {
-		web.ReadInQueue()
+		go web.ReadInQueue()
 	}
 
 	web.InitGun(config)
@@ -46,10 +45,7 @@ func startClient(config *config.Config) {
 
 	connections.InitAllConnections(config)
 
-	if config.Redis.Enable {
-		defer connections.Con.Redis.Close()
-	}
-
+	defer connections.Con.Redis.Close()
 	for {
 
 		if config.Redis.Enable {
@@ -63,7 +59,7 @@ func startClient(config *config.Config) {
 			time.Sleep(1 * time.Second)
 
 			if config.RabbitMQ.Enable {
-				connections.Con.RabbitMQ.Send(fmt.Sprint("MR.ROBOT", ":", j))
+				connections.Con.RabbitMQ.Send(fmt.Sprint("fsociety", j, ".dat"))
 			} else {
 				break
 			}
@@ -74,4 +70,5 @@ func startClient(config *config.Config) {
 		fmt.Println("Sleeep...")
 
 	}
+
 }
