@@ -3,16 +3,19 @@
 
 ## Приложение для тестирования отказоустойчивости компонентов в kubernetes
 
-### DockerHub
-
-```bash
-docker pull pengwin61/dummy:latest
-```
-
 ### Build через Makefile
 
 ```bash
 make build
+```
+
+### Docker Hub
+```bash
+docker pull pengwin61/dummy:latest
+```
+### Docker-compose
+```bash
+cd ./deployment && docker compose up -d --force-recreate
 ```
 
 ### Flugs application
