@@ -4,8 +4,6 @@ import (
 	"docker-dummy/internal/connections"
 	"docker-dummy/internal/core"
 	"docker-dummy/internal/database"
-	"docker-dummy/internal/rabbitmq"
-	"docker-dummy/internal/redis"
 	"fmt"
 	"log"
 	"net/http"
@@ -23,7 +21,7 @@ func getResponse(c *gin.Context) {
 		},
 		ExternalService: ExternalService{
 			Redis: Redis{
-				Hostname: redis.RedisIp,
+				Hostname: redisHost,
 				Status:   connections.Con.Redis.Check().Val(),
 				RedisResponse: RedisResponse{
 					Name:    connections.Con.Redis.Get("name"),
@@ -31,10 +29,10 @@ func getResponse(c *gin.Context) {
 				},
 			},
 			Rabbit: Rabbit{
-				Hostname: fmt.Sprint(rabbitmq.RabbitIP, ":", rabbitmq.RabbitPort),
+				Hostname: fmt.Sprint(rabbitHost, ":", rabbitPort),
 				Status:   "to_do",
 				RabbitResponse: RabbitResponse{
-					Msg: msg,
+					Msg: []string{"to_do", "to_do"},
 				},
 			},
 			Database: Database{

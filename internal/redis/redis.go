@@ -8,18 +8,16 @@ import (
 	"github.com/go-redis/redis/v8"
 )
 
-var RedisIp = "192.168.140.185:6379"
-
 type ClientRedis struct {
 	client *redis.Client
 }
 
-func NewRedisClient(url string, password string, db int) *ClientRedis {
+func NewRedisClient(host string, port string, password string, db int) *ClientRedis {
 
 	ctx := context.Background()
 
 	client := redis.NewClient(&redis.Options{
-		Addr:     url,
+		Addr:     fmt.Sprint(host, ":", port),
 		Password: password,
 		DB:       db,
 	})
@@ -28,7 +26,7 @@ func NewRedisClient(url string, password string, db int) *ClientRedis {
 	if err != nil {
 		wrapper.Err(err)
 	} else {
-		fmt.Printf("connection to redis:%s\nping:%s\nerr:%s\n", url, pong, err)
+		fmt.Printf("connection to redis:%s\nping:%s\nerr:%s\n", fmt.Sprint(host, ":", port), pong, err)
 	}
 
 	return &ClientRedis{client: client}

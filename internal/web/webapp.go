@@ -1,12 +1,21 @@
 package web
 
 import (
+	"docker-dummy/internal/config"
 	"fmt"
 
 	"github.com/gin-gonic/gin"
 )
 
-func InitGun() {
+var redisHost string
+var rabbitHost string
+var rabbitPort string
+
+func InitGun(config *config.Config) {
+
+	redisHost = config.Redis.Host
+	rabbitHost = config.RabbitMQ.Host
+	rabbitPort = config.RabbitMQ.Port
 
 	r := gin.Default()
 

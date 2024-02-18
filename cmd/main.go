@@ -3,56 +3,71 @@ package main
 import (
 	"docker-dummy/internal/config"
 	"docker-dummy/internal/connections"
-	"docker-dummy/internal/redis"
 	"docker-dummy/internal/web"
 	"fmt"
+	"log"
 	"time"
 )
 
 func main() {
 	conf := config.InitConfig()
 
-	if conf.Server {
-		startServer()
-	} else if conf.Client {
-		startClient()
+	if conf.App.Server {
+		startServer(conf)
+	} else if conf.App.Client {
+		startClient(conf)
 	} else {
 		fmt.Println("Please specify server or client")
 	}
 }
 
-func startServer() {
-	fmt.Println("Starting server....")
+func startServer(config *config.Config) {
+	log.Println("Starting server....")
+	log.Printf("redis enable: %t, rabbit enable: %t\n", config.Redis.Enable, config.RabbitMQ.Enable)
 
-	connections.InitAllConnections(redis.RedisIp, "", 0)
+	connections.InitAllConnections(config)
 
-	defer connections.Con.Redis.Close()
+	if config.Redis.Enable {
+		defer connections.Con.Redis.Close()
+	}
 
-	go web.InitGun()
+	if config.RabbitMQ.Enable {
+		web.ReadInQueue()
+	}
 
-	web.ReadInQueue()
+	web.InitGun(config)
 }
 
-func startClient() {
+func startClient(config *config.Config) {
 	var Count = 1000000
 
-	fmt.Println("Starting client....")
+	log.Println("Starting client....")
+	log.Printf("redis enable: %t, rabbit enable: %t\n", config.Redis.Enable, config.RabbitMQ.Enable)
 
-	connections.InitAllConnections(redis.RedisIp, "", 0)
+	connections.InitAllConnections(config)
 
-	defer connections.Con.Redis.Close()
+	if config.Redis.Enable {
+		defer connections.Con.Redis.Close()
+	}
 
 	for {
 
-		connections.Con.Redis.Set("name", "Elliot")
-		connections.Con.Redis.Set("surname", "Alderson")
-		connections.Con.Redis.Set("msg", "Hello, Friend!")
+		if config.Redis.Enable {
+			connections.Con.Redis.Set("name", "Elliot")
+			connections.Con.Redis.Set("surname", "Alderson")
+			connections.Con.Redis.Set("msg", "Hello, Friend!")
+		}
 
 		for j := 0; j < Count; j++ {
 
 			time.Sleep(1 * time.Second)
 
-			connections.Con.RabbitMQ.Send(fmt.Sprint("MR.ROBOT", ":", j))
+			if config.RabbitMQ.Enable {
+				connections.Con.RabbitMQ.Send(fmt.Sprint("MR.ROBOT", ":", j))
+			} else {
+				break
+			}
+
 		}
 
 		time.Sleep(20 * time.Second)

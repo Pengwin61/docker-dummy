@@ -2,6 +2,7 @@ package rabbitmq
 
 import (
 	"context"
+	"docker-dummy/internal/config"
 	"fmt"
 	"log"
 	"time"
@@ -10,20 +11,16 @@ import (
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
-var RabbitIP = "192.168.140.185"
-var rabbitUser = "pengwin"
-var rabbitPass = "password"
-var RabbitPort = "5672"
-
 type ClientRabbit struct {
 	Client  *amqp.Connection
 	Queue   *amqp.Queue
 	Channel *amqp.Channel
 }
 
-func NewRabbitClient() *ClientRabbit {
+func NewRabbitClient(config *config.Config) *ClientRabbit {
 
-	conn, err := amqp.Dial(fmt.Sprintf("amqp://%s:%s@%s:%s/", rabbitUser, rabbitPass, RabbitIP, RabbitPort))
+	conn, err := amqp.Dial(fmt.Sprintf("amqp://%s:%s@%s:%s/",
+		config.RabbitMQ.User, config.RabbitMQ.Pass, config.RabbitMQ.Host, config.RabbitMQ.Port))
 	if err != nil {
 
 		log.Fatalf("unable to open connect to RabbitMQ server. Error: %s", err)
