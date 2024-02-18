@@ -2,7 +2,7 @@ package redis
 
 import (
 	"context"
-	"docker-dummy/internal/wrapper"
+	"docker-dummy/internal/ewrap"
 	"fmt"
 
 	"github.com/go-redis/redis/v8"
@@ -24,7 +24,7 @@ func NewRedisClient(host string, port string, password string, db int) *ClientRe
 
 	pong, err := client.Ping(ctx).Result()
 	if err != nil {
-		wrapper.Err(err)
+		ewrap.Err(err)
 	} else {
 		fmt.Printf("connection to redis:%s\nping:%s\nerr:%s\n", fmt.Sprint(host, ":", port), pong, err)
 	}
@@ -42,7 +42,7 @@ func (cr *ClientRedis) Get(entity string) string {
 
 func (cr *ClientRedis) Set(key, value string) {
 	err := cr.client.Set(context.Background(), key, value, 0).Err()
-	wrapper.Err(err)
+	ewrap.Err(err)
 }
 
 func (cr *ClientRedis) Check() *redis.StatusCmd {
