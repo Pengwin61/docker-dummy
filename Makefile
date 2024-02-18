@@ -7,7 +7,7 @@ build:
 	go build -o dummy cmd/main.go
 
 build-docker:
-    # make build-docker-version version=0.0.3
+    # make build-docker version=0.0.3
 	docker build -t pengwin61/dummy:$(version) .
 push-docker:
 	docker push pengwin61/dummy:$(version)
