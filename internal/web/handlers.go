@@ -22,10 +22,10 @@ func getResponse(c *gin.Context) {
 		ExternalService: ExternalService{
 			Redis: Redis{
 				Hostname: webParams.redisHost,
-				Status:   connections.Con.Redis.Check(),
+				Status:   checkRedis(),
 				RedisResponse: RedisResponse{
-					Name:    "name",
-					Surname: "s",
+					Name:    getInRedis("name"),
+					Surname: getInRedis("surname"),
 				},
 			},
 			Rabbit: Rabbit{
@@ -68,8 +68,21 @@ func ReadInQueue() {
 			}
 		}()
 		<-forever
-	} else {
-		msg = append(msg, "host rabbit is not connected")
 	}
 
+}
+
+func checkRedis() string {
+
+	if connections.Con.Redis != nil {
+		return connections.Con.Redis.Check()
+	}
+	return ""
+}
+
+func getInRedis(entity string) string {
+	if connections.Con.Redis != nil {
+		return connections.Con.Redis.Get(entity)
+	}
+	return ""
 }

@@ -31,7 +31,7 @@ func getAllConnections(config *config.Config) *Connections {
 	if config.RabbitMQ.Enable {
 		rabbitc = rabbitmq.NewRabbitClient(config)
 	} else {
-		log.Println("i can't connect to the redis host because the enable parameter is false")
+		log.Println("i can't connect to the rabbit host because the enable parameter is false")
 	}
 
 	return &Connections{Redis: rc, RabbitMQ: rabbitc}

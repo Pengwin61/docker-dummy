@@ -51,7 +51,6 @@ func (cr *ClientRedis) Check() string {
 		return cr.client.Ping(context.Background()).String()
 	}
 	return ""
-	// return cr.client.Ping(context.Background()) *redis.StatusCmd
 }
 
 func (cr *ClientRedis) Close() {
