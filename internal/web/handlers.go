@@ -11,12 +11,42 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func getResponse(c *gin.Context) {
+func getResponseHTML(c *gin.Context) {
+	c.HTML(http.StatusOK, "index.html", gin.H{
+
+		"time":     time.Now().Format("2006-01-02 15:04:05"),
+		"hostname": core.GetHostname(),
+		"ip":       core.GetIP(),
+		"version":  webParams.appVersion,
+
+		"redisHost":   webParams.redisHost,
+		"redisStatus": checkRedis(),
+		"redisResponse": RedisResponse{
+			Name:    getInRedis("name"),
+			Surname: getInRedis("surname"),
+		},
+
+		"rabbitHost":  webParams.rabbitHost,
+		"rabbitPort":  webParams.rabbitPort,
+		"rabbitQueue": webParams.rabbitQueue,
+		"rabbitResponse": RabbitResponse{
+			Msg: msg,
+		},
+
+		"dbHost":     "TO_DO",
+		"dbName":     "TO_DO",
+		"dbStatus":   "TO_DO",
+		"dbResponse": "TO_DO",
+	})
+}
+
+func getResponseJSON(c *gin.Context) {
 	response := response{
 		TimeStamp: time.Now().Format("2006-01-02 15:04:05"),
 		System: System{
 			Hostname: core.GetHostname(),
 			Ip:       core.GetIP(),
+			Version:  webParams.appVersion,
 		},
 		ExternalService: ExternalService{
 			Redis: Redis{

@@ -16,6 +16,7 @@ type ExternalService struct {
 type System struct {
 	Hostname string `json:"hostname"`
 	Ip       net.IP `json:"ip"`
+	Version  string `json:"version"`
 }
 
 type Redis struct {

@@ -12,6 +12,7 @@ type WebParams struct {
 	rabbitHost  string
 	rabbitPort  string
 	rabbitQueue string
+	appVersion  string
 }
 
 var webParams *WebParams
@@ -20,6 +21,7 @@ func InitGun(config *config.Config) {
 	webParams = getParams(config)
 
 	r := gin.Default()
+	r.LoadHTMLGlob("templates/html/*.html")
 
 	gin.SetMode(gin.ReleaseMode)
 
@@ -34,7 +36,9 @@ func InitGun(config *config.Config) {
 
 func RunApi(r *gin.Engine) {
 
-	r.GET("/", getResponse)
+	r.GET("/", getResponseJSON)
+
+	r.GET("/v1", getResponseHTML)
 }
 
 func getParams(config *config.Config) *WebParams {
@@ -43,5 +47,6 @@ func getParams(config *config.Config) *WebParams {
 		redisHost:   config.Redis.Host,
 		rabbitHost:  config.RabbitMQ.Host,
 		rabbitPort:  config.RabbitMQ.Port,
-		rabbitQueue: config.RabbitMQ.QueueName}
+		rabbitQueue: config.RabbitMQ.QueueName,
+		appVersion:  config.App.Version}
 }

@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+
+  <head>
+    <title>{{ .title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+  </head>
+
+  <body class="container">
+
+    
+    TIME: {{ .time }} <br/> 
+    HOSTNAME: {{ .hostname }} <br/> 
+    IP: {{ .ip }} <br/> 
+    APP_VERSION : {{ .version }} <br/> 
+    ---------------------------------<br/> 
+    REDIS_HOST: {{ .redisHost }} <br/> 
+    REDIS_STATUS: {{ .redisStatus }} <br/> 
+
+    REDIS_RESPONSE: 
+    {{ .redisResponse.Name }} 
+    {{ .redisResponse.Surname }}
+    <br/> 
+
+    ---------------------------------<br/> 
+    RABBIT_HOST: {{ .rabbitHost }} <br/> 
+    RABBIT_PORT: {{ .rabbitPort }} <br/> 
+    RABBIT_QUEUE: {{ .rabbitQueue }} <br/> 
+
+    RABBIT_RESPONSE: {{ .rabbitResponse.Msg }} <br/>
+
+    ---------------------------------<br/> 
+    DB_HOST: {{ .dbHost }} <br/>
+    DB: {{ .dbName }} <br/> 
+    DB_STATUS: {{ .dbStatus }} <br/> 
+    DB_RESPONSE: {{ .dbResponse }} <br/>
+
+  </body>
+
+
+  </html>

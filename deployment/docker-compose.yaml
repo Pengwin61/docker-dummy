@@ -1,9 +1,20 @@
 version: "3.8"
 
 services:
+  db:
+    image: postgres:14.11-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=pengwin
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=dummy
+    ports:
+      - 5432:5432
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
 
   redis:
-    image: redis
+    image: redis:alpine
     hostname: redis-docker
     container_name: redis
     restart: unless-stopped
@@ -32,38 +43,38 @@ services:
       timeout: 5s
       retries: 30
 
-  dummy-server:
-    image: pengwin61/dummy:latest
-    container_name: dummy-server
-    hostname: dummy-server-host
-    command:
-      - "./dummy"
-      - "--server=true"
-      - "--redis-host=${REDIS_HOST}"
-      - "--rabbit-host=${RABBITMQ_HOST}"
-      - "--rabbit-user=${RABBITMQ_DEFAULT_USER}"
-      - "--rabbit-pass=${RABBITMQ_DEFAULT_PASS}"
-    ports:
-      - 80:80
-    depends_on:
-      redis:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy 
+  # dummy-server:
+  #   image: pengwin61/dummy:latest
+  #   container_name: dummy-server
+  #   hostname: dummy-server-host
+  #   command:
+  #     - "./dummy"
+  #     - "--server=true"
+  #     - "--redis-host=${REDIS_HOST}"
+  #     - "--rabbit-host=${RABBITMQ_HOST}"
+  #     - "--rabbit-user=${RABBITMQ_DEFAULT_USER}"
+  #     - "--rabbit-pass=${RABBITMQ_DEFAULT_PASS}"
+  #   ports:
+  #     - 80:80
+  #   depends_on:
+  #     redis:
+  #       condition: service_healthy
+  #     rabbitmq:
+  #       condition: service_healthy 
 
-  dummy-client:
-    image: pengwin61/dummy:latest
-    container_name: dummy-client
-    hostname: dummy-client-host
-    command:
-      - "./dummy"
-      - "--client=true"
-      - "--redis-host=${REDIS_HOST}"
-      - "--rabbit-host=${RABBITMQ_HOST}"
-      - "--rabbit-user=${RABBITMQ_DEFAULT_USER}"
-      - "--rabbit-pass=${RABBITMQ_DEFAULT_PASS}"
-    depends_on:
-      redis:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy 
+  # dummy-client:
+  #   image: pengwin61/dummy:latest
+  #   container_name: dummy-client
+  #   hostname: dummy-client-host
+  #   command:
+  #     - "./dummy"
+  #     - "--client=true"
+  #     - "--redis-host=${REDIS_HOST}"
+  #     - "--rabbit-host=${RABBITMQ_HOST}"
+  #     - "--rabbit-user=${RABBITMQ_DEFAULT_USER}"
+  #     - "--rabbit-pass=${RABBITMQ_DEFAULT_PASS}"
+  #   depends_on:
+  #     redis:
+  #       condition: service_healthy
+  #     rabbitmq:
+  #       condition: service_healthy 

@@ -12,8 +12,9 @@ type Config struct {
 	RabbitMQ RabbitConfig
 }
 type App struct {
-	Server bool
-	Client bool
+	Server  bool
+	Client  bool
+	Version string
 }
 
 type RabbitConfig struct {
@@ -61,8 +62,9 @@ func initConfig() *Config {
 
 	return &Config{
 		App: App{
-			Server: *server,
-			Client: *client,
+			Server:  *server,
+			Client:  *client,
+			Version: "0.0.4",
 		},
 		Redis: RedisConfig{
 			Enable: *redis,
