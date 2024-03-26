@@ -8,11 +8,13 @@ import (
 )
 
 type WebParams struct {
-	redisHost   string
-	rabbitHost  string
-	rabbitPort  string
-	rabbitQueue string
-	appVersion  string
+	redisHost    string
+	rabbitHost   string
+	rabbitPort   string
+	rabbitQueue  string
+	appVersion   string
+	databaseHost string
+	databaseName string
 }
 
 var webParams *WebParams
@@ -21,7 +23,7 @@ func InitGun(config *config.Config) {
 	webParams = getParams(config)
 
 	r := gin.Default()
-	r.LoadHTMLGlob("templates/html/*.html")
+	// r.LoadHTMLGlob("templates/html/*.html")
 
 	gin.SetMode(gin.ReleaseMode)
 
@@ -38,15 +40,18 @@ func RunApi(r *gin.Engine) {
 
 	r.GET("/", getResponseJSON)
 
-	r.GET("/v1", getResponseHTML)
+	// r.GET("/v1", getResponseHTML)
 }
 
 func getParams(config *config.Config) *WebParams {
 
 	return &WebParams{
-		redisHost:   config.Redis.Host,
-		rabbitHost:  config.RabbitMQ.Host,
-		rabbitPort:  config.RabbitMQ.Port,
-		rabbitQueue: config.RabbitMQ.QueueName,
-		appVersion:  config.App.Version}
+		redisHost:    config.Redis.Host,
+		rabbitHost:   config.RabbitMQ.Host,
+		rabbitPort:   config.RabbitMQ.Port,
+		rabbitQueue:  config.RabbitMQ.QueueName,
+		appVersion:   config.App.Version,
+		databaseHost: config.Database.Host,
+		databaseName: config.Database.DbName,
+	}
 }

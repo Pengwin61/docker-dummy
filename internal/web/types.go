@@ -30,7 +30,8 @@ type RedisResponse struct {
 }
 
 type Database struct {
-	Hostname   string     `json:"dbname"`
+	Hostname   string     `json:"dbhost"`
+	DbName     string     `json:"dbname"`
 	Status     string     `json:"dbstatus"`
 	DbResponse DbResponse `json:"dbresponse"`
 }

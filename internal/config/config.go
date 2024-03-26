@@ -10,7 +10,9 @@ type Config struct {
 	App      App
 	Redis    RedisConfig
 	RabbitMQ RabbitConfig
+	Database DatabaseConfig
 }
+
 type App struct {
 	Server  bool
 	Client  bool
@@ -32,10 +34,18 @@ type RedisConfig struct {
 	Pass   string
 	Db     int
 }
+type DatabaseConfig struct {
+	Enable bool
+	Host   string
+	Port   string
+	User   string
+	Pass   string
+	DbName string
+}
 
 func GetConfig() *Config {
 	cfg := initConfig()
-	checkConfig(cfg)
+	checkConfigs(cfg)
 
 	return cfg
 }
@@ -46,6 +56,7 @@ func initConfig() *Config {
 	client := pflag.Bool("client", false, "Run client app")
 	redis := pflag.Bool("redis-enable", false, "Run redis")
 	rabbit := pflag.Bool("rabbit-enable", false, "Run rabbit")
+	database := pflag.Bool("database-enable", false, "Run rabbit")
 
 	redisHost := pflag.String("redis-host", "127.0.0.1", "Redis host")
 	redisPort := pflag.String("redis-port", "6379", "Redis port")
@@ -57,6 +68,12 @@ func initConfig() *Config {
 	rabbitUser := pflag.String("rabbit-user", "guest", "RabbitMQ user")
 	rabbitPass := pflag.String("rabbit-pass", "guest", "RabbitMQ password")
 	rabbitQueue := pflag.String("rabbit-queue", "q1", "Name Queue")
+
+	dbHost := pflag.String("db-host", "127.0.0.1", "Database host")
+	dbPort := pflag.String("db-port", "5432", "Database port")
+	dbUser := pflag.String("db-user", "pengwin", "Database user")
+	dbPass := pflag.String("db-pass", "password", "Database password")
+	dbName := pflag.String("db-name", "dummy", "Database name")
 
 	pflag.Parse()
 
@@ -80,10 +97,18 @@ func initConfig() *Config {
 			User:      *rabbitUser,
 			Pass:      *rabbitPass,
 			QueueName: *rabbitQueue,
+		},
+		Database: DatabaseConfig{
+			Enable: *database,
+			Host:   *dbHost,
+			Port:   *dbPort,
+			User:   *dbUser,
+			Pass:   *dbPass,
+			DbName: *dbName,
 		}}
 }
 
-func checkConfig(cfg *Config) {
+func checkConfigs(cfg *Config) {
 	checkRedis(cfg)
 	checkRabbit(cfg)
 }
