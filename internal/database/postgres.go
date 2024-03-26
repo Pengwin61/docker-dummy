@@ -41,8 +41,6 @@ func connectDB(host, port, user, password, dbname string) (*sql.DB, error) {
 	return db, nil
 }
 
-var PostgresIp = "192.168.140.185:5432"
-
-func Init() {
-	PostgresIp = "localhost:5432"
+func (c *ClientPG) CloseDb() {
+	c.conDB.Close()
 }

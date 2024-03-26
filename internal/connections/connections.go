@@ -23,6 +23,8 @@ func InitAllConnections(config *config.Config) {
 func getAllConnections(config *config.Config) *Connections {
 	var rc *redis.ClientRedis
 	var rabbitc *rabbitmq.ClientRabbit
+	var db *database.ClientPG
+	var err error
 
 	if config.Redis.Enable {
 		rc = redis.NewRedisClient(config.Redis.Host, config.Redis.Port, config.Redis.Pass, config.Redis.Db)
@@ -36,9 +38,14 @@ func getAllConnections(config *config.Config) *Connections {
 		log.Println("i can't connect to the rabbit host because the enable parameter is false")
 	}
 
-	db, err := database.NewPostgresClient(
-		config.Database.Host, config.Database.Port, config.Database.User,
-		config.Database.Pass, config.Database.DbName)
+	if config.Database.Enable {
+		db, err = database.NewPostgresClient(
+			config.Database.Host, config.Database.Port, config.Database.User,
+			config.Database.Pass, config.Database.DbName)
+	} else {
+		log.Println("i can't connect to the database host because the enable parameter is false")
+	}
+
 	if err != nil {
 		log.Println("i can`t connect to postgres, ", config.Database.Host)
 	}

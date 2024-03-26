@@ -23,13 +23,19 @@ func main() {
 
 func startServer(config *config.Config) {
 	log.Println("Starting server....")
-	log.Printf("redis enable: %t, rabbit enable: %t\n", config.Redis.Enable, config.RabbitMQ.Enable)
+	log.Printf("redis enable: %t, rabbit enable: %t, database enable: %t\n",
+		config.Redis.Enable, config.RabbitMQ.Enable, config.Database.Enable)
 
 	connections.InitAllConnections(config)
 
 	if config.Redis.Enable {
 		defer connections.Con.Redis.Close()
 	}
+
+	if config.Database.Enable {
+		connections.Con.Postgres.CloseDb()
+	}
+
 	if config.RabbitMQ.Enable {
 		go web.ReadInQueue()
 	}

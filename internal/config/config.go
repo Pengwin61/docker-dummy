@@ -109,11 +109,12 @@ func initConfig() *Config {
 }
 
 func checkConfigs(cfg *Config) {
-	checkRedis(cfg)
-	checkRabbit(cfg)
+	checkRedisConfig(cfg)
+	checkRabbitConfig(cfg)
+	checkDbConfig(cfg)
 }
 
-func checkRedis(cfg *Config) {
+func checkRedisConfig(cfg *Config) {
 	if cfg.Redis.Host != "127.0.0.1" {
 		fmt.Println("redis host is change")
 		cfg.Redis.Enable = true
@@ -132,7 +133,31 @@ func checkRedis(cfg *Config) {
 	}
 }
 
-func checkRabbit(cfg *Config) {
+func checkDbConfig(cfg *Config) {
+	if cfg.Database.Host != "127.0.0.1" {
+		fmt.Println("database host is change")
+		cfg.Database.Enable = true
+	}
+	if cfg.Database.Port != "5432" {
+		fmt.Println("database port is change")
+		cfg.Database.Enable = true
+	}
+	if cfg.Database.User != "pengwin" {
+		fmt.Println("database user is change")
+		cfg.Database.Enable = true
+	}
+	if cfg.Database.Pass != "password" {
+		fmt.Println("database pass is change")
+		cfg.Database.Enable = true
+	}
+	if cfg.Database.DbName != "dummy" {
+		fmt.Println("database name is change")
+		cfg.Database.Enable = true
+	}
+
+}
+
+func checkRabbitConfig(cfg *Config) {
 
 	if cfg.RabbitMQ.Host != "127.0.0.1" {
 		fmt.Println("rabbit host is change")
