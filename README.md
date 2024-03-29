@@ -43,13 +43,17 @@ cd ./deployment && docker compose up -d --force-recreate
       --db-pass string         Database password (default "password")
       --db-name string         Database name  (default "dummy")
 
-
 ```
 
 
 
 ## Server
 Сервер читает данные
+
+## WEB
+```
+http://localhost
+```
 
 ### Run CMD
 ```

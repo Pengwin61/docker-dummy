@@ -56,7 +56,7 @@ func initConfig() *Config {
 	client := pflag.Bool("client", false, "Run client app")
 	redis := pflag.Bool("redis-enable", false, "Run redis")
 	rabbit := pflag.Bool("rabbit-enable", false, "Run rabbit")
-	database := pflag.Bool("database-enable", false, "Run rabbit")
+	database := pflag.Bool("database-enable", false, "Run database")
 
 	redisHost := pflag.String("redis-host", "127.0.0.1", "Redis host")
 	redisPort := pflag.String("redis-port", "6379", "Redis port")
